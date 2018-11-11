@@ -248,7 +248,52 @@ class App extends Component {
       emails: null,
       email: null,
     }, () => {
-      
+      fetch('/graphql', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Accept': 'application/json'
+        },
+        body: JSON.stringify({
+          query: `
+          {
+            me {
+              name
+              organizations {
+                smallLogo
+              }
+              organization(id: "${this.state.selectedOrga}") {
+                email(id: "${this.state.selectedEmail}") {
+                  title
+                  from
+                  body
+                }
+                emails {
+                  title
+                  recap
+                }
+              }
+            }
+          }
+          `
+        })
+      }).then(r => r.json()).then(r => {
+        const data = r.data;
+        const me = data.me;
+        const organizations = me.organizations;
+        const email = me.organization.email;
+        const emails = me.organization.emails;
+        this.setState({
+          type: 'graphql',
+          loading: false,
+          me: {
+            name: me.name
+          },
+          organizations,
+          emails,
+          email,
+        });
+      })
     });
   }
 
