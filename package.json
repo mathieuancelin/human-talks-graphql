@@ -1,0 +1,44 @@
+{
+  "name": "human-talks-graphql",
+  "version": "1.0.0",
+  "main": "src/server.js",
+  "license": "MIT",
+  "scripts": {
+    "build": "parcel build src/ui.js --out-file dist/humantalks.min.js --global HumanTalks",
+    "watch": "parcel watch src/ui.js --out-file dist/humantalks.min.js --global HumanTalks",
+    "start": "nodemon src/server.js",
+    "prettier": "prettier --write --single-quote --trailing-comma es5 --print-width 100 --tab-width 2 --jsx-bracket-same-line \"src/**/*.js\""
+  },
+  "dependencies": {
+    "bootstrap": "4.1.3",
+    "express": "4.16.4",
+    "express-graphql": "0.6.12",
+    "faker": "^4.1.0",
+    "graphql": "14.0.2",
+    "lodash": "4.17.11",
+    "md5": "^2.2.1",
+    "moment": "2.22.2",
+    "node-fetch": "2.2.0",
+    "react": "16.6.0",
+    "react-dom": "16.6.0",
+    "whatwg-fetch": "3.0.0"
+  },
+  "devDependencies": {
+    "babel-core": "6.26.3",
+    "babel-plugin-transform-class-properties": "6.24.1",
+    "babel-preset-env": "1.7.0",
+    "babel-preset-react-app": "3.1.2",
+    "nodemon": "1.18.6",
+    "parcel": "1.9.7",
+    "prettier": "1.14.3"
+  },
+  "babel": {
+    "plugins": [
+      "transform-class-properties"
+    ],
+    "presets": [
+      "env",
+      "react-app"
+    ]
+  }
+}
