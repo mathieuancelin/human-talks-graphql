@@ -67,12 +67,13 @@ class Loader extends Component {
 
 class Topbar extends Component {
   render() {
+    const type = window.localStorage.getItem('fetch-type') || 'rest';
     return (
       <div style={{ height: 60, width: '100vw', backgroundColor: '#333', display: 'flex', justifyContent: 'space-between', alignItems: 'center', color: 'white', paddingLeft: 20, paddingRight: 20 }}>
         <span style={{ fontSize: 20 }}>My Emails</span>
         <div style={{ }}> 
-          <button type="button" disabled={this.props.loading} onClick={this.props.reloadGraphql} className="btn btn-sm btn-outline-primary"><i className="fa fa-sync-alt"></i> GraphQL</button>
-          <button type="button" disabled={this.props.loading} onClick={this.props.reloadRest} style={{ marginLeft: 5 }} className="btn btn-sm btn-outline-primary"><i className="fa fa-sync-alt"></i> REST</button>
+          <button type="button" disabled={this.props.loading} onClick={this.props.reloadGraphql} className={`btn btn-sm btn-outline-${type == 'rest' ? 'primary' : 'success'}`}><i className="fa fa-sync-alt"></i> GraphQL</button>
+          <button type="button" disabled={this.props.loading} onClick={this.props.reloadRest} style={{ marginLeft: 5 }} className={`btn btn-sm btn-outline-${type == 'rest' ? 'success' : 'primary'}`}><i className="fa fa-sync-alt"></i> REST</button>
         </div>
         <div style={{ display: 'flex' }}> 
           {this.props.me ? this.props.me.name : <Loader />} <i style={{ marginLeft: 5 }} className="fa fa-user" />
@@ -210,6 +211,7 @@ class App extends Component {
   }
 
   reloadRest = () => {
+    window.localStorage.setItem('fetch-type', 'rest');
     this.setState({
       type: 'rest',
       loading: true,
@@ -237,6 +239,7 @@ class App extends Component {
   }
 
   reloadGraphql = () => {
+    window.localStorage.setItem('fetch-type', 'graphql')
     this.setState({
       type: 'graphql',
       loading: true,
@@ -249,10 +252,19 @@ class App extends Component {
     });
   }
 
+  componentDidMount() {
+    const type = window.localStorage.getItem('fetch-type') || 'rest';
+    if (type === 'rest') {
+      this.reloadRest();
+    } else {
+      this.reloadGraphql();
+    }
+  }
+
   render() {
     return (
       <div style={{ display: 'flex', flexDirection: 'column', width: '100vw', height: '100vh' }}>
-        <Topbar me={this.state.me} loading={this.state.loading} reloadGraphql={this.reloadGraphql} reloadRest={this.reloadRest} />
+        <Topbar me={this.state.me} loading={false} reloadGraphql={this.reloadGraphql} reloadRest={this.reloadRest} />
         <div style={{ display: 'flex', flexDirection: 'row', width: '100%', height: '100%' }}>
           <Organizations setSelectedOrga={this.setSelectedOrga} selectedOrga={this.state.selectedOrga} organizations={this.state.organizations} />
           <Emails setSelectedEmail={this.setSelectedEmail} selectedEmail={this.state.selectedEmail} emails={this.state.emails} />
