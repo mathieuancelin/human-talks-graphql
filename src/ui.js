@@ -260,6 +260,7 @@ class App extends Component {
             me {
               name
               organizations {
+                id
                 smallLogo
               }
               organization(id: "${this.state.selectedOrga}") {
@@ -269,6 +270,7 @@ class App extends Component {
                   body
                 }
                 emails {
+                  id
                   title
                   recap
                 }
