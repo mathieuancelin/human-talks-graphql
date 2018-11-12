@@ -104,18 +104,19 @@ class Organizations extends Component {
 }
 const EmailCell = (props) => (
   <div style={{ 
-      onClick: () => props.setSelectedEmail(props.email.id),
       padding: 10, 
-      display: 'flex', 
+      //display: 'flex', 
       cursor: 'pointer', 
       flexDirection: 'column', 
       alignItems: 'flex-start', 
       justifyContent: 'flex-start', 
       borderBottom: '1px solid #ddd', 
       backgroundColor: props.selectedEmail === props.email.id ? '#ccc' : 'none',
-      color: '#111' 
-    }}>
-    <span style={{ fontWeight: 'bold', marginBottom: 10 }} onClick={() => props.setSelectedEmail(props.email.id)}>{props.email.from}</span>
+      color: '#111',
+      height: 100,
+      width: '100%'
+    }} onClick={() => props.setSelectedEmail(props.email.id)}>
+    <div style={{ fontWeight: 'bold', marginBottom: 10 }} onClick={() => props.setSelectedEmail(props.email.id)}>{props.email.from}</div>
     <small onClick={() => props.setSelectedEmail(props.email.id)}>{props.email.title}</small>
   </div>
 )
