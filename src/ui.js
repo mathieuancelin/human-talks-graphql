@@ -41,21 +41,21 @@ class Loader extends Component {
       <div style={{ color: this.props.color || 'white' }}>
         <span
           style={{
-            fontSize: this.state.bigDot === 0 ? 16 : 12,
+            fontSize: this.state.bigDot === 0 ? 25 : 20,
             fontWeight: this.state.bigDot === 0 ? 'bold' : 'normal',
           }}>
           {'.'}
         </span>
         <span
           style={{
-            fontSize: this.state.bigDot === 1 ? 16 : 12,
+            fontSize: this.state.bigDot === 1 ? 25 : 20,
             fontWeight: this.state.bigDot === 1 ? 'bold' : 'normal',
           }}>
           {'.'}
         </span>
         <span
           style={{
-            fontSize: this.state.bigDot === 2 ? 16 : 12,
+            fontSize: this.state.bigDot === 2 ? 25 : 20,
             fontWeight: this.state.bigDot === 2 ? 'bold' : 'normal',
           }}>
           {'.'}
@@ -74,6 +74,7 @@ class Topbar extends Component {
         <div style={{ }}> 
           <button type="button" disabled={this.props.loading} onClick={this.props.reloadGraphql} className={`btn btn-sm btn-outline-${type == 'rest' ? 'primary' : 'success'}`}><i className="fa fa-sync-alt"></i> GraphQL</button>
           <button type="button" disabled={this.props.loading} onClick={this.props.reloadRest} style={{ marginLeft: 5 }} className={`btn btn-sm btn-outline-${type == 'rest' ? 'success' : 'primary'}`}><i className="fa fa-sync-alt"></i> REST</button>
+          <a href="/graphql" target="_blank" style={{ marginLeft: 5 }} className={`btn btn-sm btn-outline-info`}>GraphiQL</a>
         </div>
         <div style={{ display: 'flex' }}> 
           {this.props.me ? this.props.me.name : <Loader />} <i style={{ marginLeft: 5 }} className="fa fa-user" />
@@ -96,7 +97,7 @@ class Organizations extends Component {
     }
     return (
       <div style={{ height: window.innerHeight - 56, width: 60, backgroundColor: '#555', display: 'flex', flexDirection: 'column', justifyContent: 'flex-start', alignItems: 'center', color: 'white' }}>
-        {this.props.organizations.map(o => <OrgaAvatar setSelectedOrga={this.props.setSelectedOrga} selectedOrga={this.props.selectedOrga} orga={o} />)}
+        {this.props.organizations.map(o => <OrgaAvatar key={o.id} setSelectedOrga={this.props.setSelectedOrga} selectedOrga={this.props.selectedOrga} orga={o} />)}
       </div>
     )
   }
@@ -109,13 +110,13 @@ const EmailCell = (props) => (
       cursor: 'pointer', 
       flexDirection: 'column', 
       alignItems: 'flex-start', 
-      justifyContent: 'center', 
+      justifyContent: 'flex-start', 
       borderBottom: '1px solid #ddd', 
       backgroundColor: props.selectedEmail === props.email.id ? '#ccc' : 'none',
       color: '#111' 
     }}>
-    <span style={{ fontWeight: 'bold', marginBottom: 10 }} onClick={() => props.setSelectedEmail(props.email.id)}>{props.email.title}</span>
-    <small onClick={() => props.setSelectedEmail(props.email.id)}>{props.email.recap}..</small>
+    <span style={{ fontWeight: 'bold', marginBottom: 10 }} onClick={() => props.setSelectedEmail(props.email.id)}>{props.email.from}</span>
+    <small onClick={() => props.setSelectedEmail(props.email.id)}>{props.email.title}</small>
   </div>
 )
 class Emails extends Component {
@@ -128,8 +129,8 @@ class Emails extends Component {
       )
     }
     return (
-      <div style={{ height: window.innerHeight - 56, width: 350, backgroundColor: '#eee', display: 'flex', flexDirection: 'column', justifyContent: 'flex-start', alignItems: 'center', color: 'white', overflowY: 'auto' }}>
-        {this.props.emails.map(o => <EmailCell setSelectedEmail={this.props.setSelectedEmail} selectedEmail={this.props.selectedEmail} email={o} />)}
+      <div style={{ height: window.innerHeight - 56, width: 350, backgroundColor: '#eee', display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'flex-start', color: 'white', overflowY: 'auto' }}>
+        {this.props.emails.map(o => <EmailCell key={o.id} setSelectedEmail={this.props.setSelectedEmail} selectedEmail={this.props.selectedEmail} email={o} />)}
       </div>
     )
   }
@@ -144,7 +145,7 @@ class Email extends Component {
       );
     }
     return (
-      <div style={{ height: window.innerHeight - 56, padding: 20, display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'flex-start', width: window.innerWidth - 60 - 350, overflowY: 'auto' }}>
+      <div style={{ height: window.innerHeight - 56, padding: 20, display: 'flex', flexDirection: 'column', alignItems: 'flex-start', justifyContent: 'center', width: window.innerWidth - 60 - 350, overflowY: 'auto' }}>
         <h1>{this.props.email.title}</h1>
         <h3>from: {this.props.email.from}</h3>
         <p style={{ textAlign: 'justify' }}>
@@ -272,7 +273,7 @@ class App extends Component {
                 emails {
                   id
                   title
-                  recap
+                  from
                 }
               }
             }

@@ -4,8 +4,6 @@ const faker = require('faker');
 const _ = require('lodash');
 const graphqlHTTP = require('express-graphql');
 const {
-  graphql,
-  buildSchema,
   GraphQLObjectType,
   GraphQLList,
   GraphQLNonNull,
@@ -30,6 +28,18 @@ function getEmails() {
   })
 }
 
+function getOrganizations() {
+  return _.range(1, 7).map(i => {
+    return {
+      id: `${i}`,
+      name: `Organization ${i}`,
+      smallLogo: `https://www.gravatar.com/avatar/${md5(`john.doe@email${i}.fr`)}?d=retro&s=50`,
+      logo: `https://www.gravatar.com/avatar/${md5(`john.doe@email${i}.fr`)}?d=retro&s=2048`,
+      description: faker.lorem.lines(20)
+    }
+  })
+}
+
 const datas = {
   me: {
     name: 'John Doe',
@@ -37,32 +47,13 @@ const datas = {
     age: 42,
     phone: '0606060606'
   },
-  organizations: [
-    {
-      id: '1',
-      name: 'Orga. 1',
-      smallLogo: `https://www.gravatar.com/avatar/${md5('mathieu.ancelin@gmail.com')}?d=retro&s=50`,
-      logo: `https://www.gravatar.com/avatar/${md5('mathieu.ancelin@gmail.com')}?d=retro&s=2048`,
-      description: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum'
-    },
-    {
-      id: '2',
-      name: 'Orga. 2',
-      logo: `https://www.gravatar.com/avatar/${md5('mathieu.ancelin@serli.com')}?d=retro&s=2048`,
-      smallLogo: `https://www.gravatar.com/avatar/${md5('mathieu.ancelin@serli.com')}?d=retro&s=50`,
-      description: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum'
-    },
-    {
-      id: '3',
-      name: 'Orga. 3',
-      logo: `https://www.gravatar.com/avatar/${md5('mathieu.ancelin@humantlaks.com')}?d=retro&s=2048`,
-      smallLogo: `https://www.gravatar.com/avatar/${md5('mathieu.ancelin@humantlaks.com')}?d=retro&s=50`,
-      description: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum'
-    }
-  ],
+  organizations: getOrganizations(),
   'organizations-1-emails': getEmails(),
   'organizations-2-emails': getEmails(),
   'organizations-3-emails': getEmails(),
+  'organizations-4-emails': getEmails(),
+  'organizations-5-emails': getEmails(),
+  'organizations-6-emails': getEmails(),
 };
 
 const EmailType = new GraphQLObjectType({
@@ -99,7 +90,13 @@ const OrganizationType = new GraphQLObjectType({
     emails: {
       type: new GraphQLList(EmailType),
       description: 'Fetch all emails of the user',
+      args: {
+        limit: { description: 'Number of item to fetch', type: GraphQLInt }
+      },
       resolve: (root, args) => {
+        if (args.limit) {
+          return _.take(datas[`organizations-${root.id}-emails`], args.limit);
+        }
         return datas[`organizations-${root.id}-emails`]
       },
     }
@@ -127,7 +124,13 @@ const MeType = new GraphQLObjectType({
     organizations: {
       type: new GraphQLList(OrganizationType),
       description: 'Fetch all organizations of the user',
+      args: {
+        limit: { description: 'Number of item to fetch', type: GraphQLInt }
+      },
       resolve: (root, args) => {
+        if (args.limit) {
+          return _.take(datas.organizations, args.limit);
+        }
         return datas.organizations
       },
     }
