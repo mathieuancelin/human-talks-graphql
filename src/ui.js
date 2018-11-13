@@ -130,7 +130,7 @@ class Emails extends Component {
       )
     }
     return (
-      <div style={{ height: window.innerHeight - 56, width: 350, backgroundColor: '#eee', display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'flex-start', color: 'white', overflowY: 'auto' }}>
+      <div style={{ paddingTop: 20, height: window.innerHeight - 56, width: 350, backgroundColor: '#eee', display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'flex-start', color: 'white', overflowY: 'auto' }}>
         {this.props.emails.map(o => <EmailCell key={o.id} setSelectedEmail={this.props.setSelectedEmail} selectedEmail={this.props.selectedEmail} email={o} />)}
       </div>
     )
@@ -261,20 +261,20 @@ class App extends Component {
           {
             me {
               name
-              organizations {
+              organizations(limit: 10) {
                 id
                 smallLogo
               }
               organization(id: "${this.state.selectedOrga}") {
-                email(id: "${this.state.selectedEmail}") {
-                  title
-                  from
-                  body
-                }
                 emails {
                   id
                   title
                   from
+                }
+                email(id: "${this.state.selectedEmail}") {
+                  title
+                  from
+                  body
                 }
               }
             }
